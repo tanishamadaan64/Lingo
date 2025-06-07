@@ -62,15 +62,24 @@ const TranslatorApp = ({ onClose }) => {
       return
     }
 
-    const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
-        inputText,
-      )}&langpair=${selectedLanguageFrom}|${selectedLanguageTo}&key=d1d0ab15f2336b1478ba`,
-    )
+    try {
+      const response = await fetch(
+        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+          inputText
+        )}&langpair=${selectedLanguageFrom}|${selectedLanguageTo}&key=d1d0ab15f2336b1478ba`
+      )
 
-    const data = await response.json()
+      const data = await response.json()
 
-    setTranslatedText(data.responseData.translatedText)
+      if (data.responseData?.translatedText) {
+        setTranslatedText(data.responseData.translatedText)
+      } else {
+        setTranslatedText('Translation not available')
+      }
+    } catch (error) {
+      console.error('Translation error:', error)
+      setTranslatedText('An error occurred during translation.')
+    }
   }
 
   const handleKeyDown = (e) => {
