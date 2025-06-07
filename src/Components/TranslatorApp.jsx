@@ -9,8 +9,25 @@ const TranslatorApp = ({ onClose }) => {
   const [inputText, setInputText] = useState('')
   const [translatedText, setTranslatedText] = useState('')
   const [charCount, setCharCount] = useState(0)
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const maxChars = 200
   const dropdownRef = useRef(null)
+
+  // Cache voices to avoid delays
+  const voicesRef = useRef([])
+
+  // Load voices once on mount
+  useEffect(() => {
+    const synth = window.speechSynthesis
+    const loadVoices = () => {
+      voicesRef.current = synth.getVoices()
+      if (voicesRef.current.length === 0) {
+        // Sometimes voices load asynchronously
+        setTimeout(loadVoices, 100)
+      }
+    }
+    loadVoices()
+  }, [])
 
   const handleClickOutside = (e) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -89,6 +106,65 @@ const TranslatorApp = ({ onClose }) => {
     }
   }
 
+  // Simple sentiment analysis heuristic for tone
+  const getSentimentScore = (text) => {
+    const positiveWords = ['happy', 'joy', 'love', 'good', 'great', 'peace', 'beautiful', 'smile', 'hope', 'bright']
+    const negativeWords = ['sad', 'hate', 'bad', 'angry', 'pain', 'hurt', 'dark', 'fear', 'cry', 'lonely']
+
+    let score = 0
+    const words = text.toLowerCase().split(/\W+/)
+
+    words.forEach(word => {
+      if (positiveWords.includes(word)) score += 1
+      if (negativeWords.includes(word)) score -= 1
+    })
+
+    return score
+  }
+
+  const handleSpeak = () => {
+    if (!translatedText.trim()) return
+
+    const synth = window.speechSynthesis
+    if (!synth) return
+
+    synth.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(translatedText)
+
+    // Use cached voices to avoid delay
+    const voices = voicesRef.current
+    const langVoices = voices.filter(v => v.lang.startsWith(selectedLanguageTo))
+    if (langVoices.length > 0) {
+      utterance.voice = langVoices[0]
+    }
+
+    // Analyze sentiment for tone
+    const sentiment = getSentimentScore(translatedText)
+
+    if (sentiment > 0) {
+      // Positive tone: slightly faster and higher pitch
+      utterance.rate = 1.1
+      utterance.pitch = 1.4
+    } else if (sentiment < 0) {
+      // Negative tone: slower and lower pitch
+      utterance.rate = 0.8
+      utterance.pitch = 0.8
+    } else {
+      // Neutral tone
+      utterance.rate = 0.9
+      utterance.pitch = 1.0
+    }
+
+    utterance.lang = selectedLanguageTo
+
+    utterance.onstart = () => setIsSpeaking(true)
+    utterance.onend = () => setIsSpeaking(false)
+    utterance.onerror = () => setIsSpeaking(false)
+
+    synth.speak(utterance)
+  }
+
   return (
     <div className="w-full h-full flex flex-col justify-between items-center px-8 sm:px-16 pt-8 pb-10 relative bg-gradient-to-r min-h-screen">
       {/* Close Button */}
@@ -153,13 +229,22 @@ const TranslatorApp = ({ onClose }) => {
         </div>
 
         {/* Output Textarea */}
-        <div className="flex-1">
+        <div className="flex-1 relative">
           <textarea
             className="w-full h-56 p-6 rounded-lg card text-orange-600 resize-none text-lg"
             readOnly
             placeholder="Translation will appear here..."
             value={translatedText || ''}
           />
+          {/* Audio button */}
+          <button
+            className={`absolute bottom-5 right-5 w-10 h-10 rounded-full bg-orange-500 text-white flex justify-center items-center hover:bg-orange-600 transition`}
+            onClick={handleSpeak}
+            disabled={isSpeaking}
+            title={isSpeaking ? 'Playing audio...' : 'Listen to translation'}
+          >
+            <i className="fa-solid fa-volume-high"></i>
+          </button>
         </div>
       </div>
 
