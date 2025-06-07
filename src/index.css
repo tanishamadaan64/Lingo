@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Righteous&family=Russo+One&family=Shojumaru&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Russo One', sans-serif;
+}
+
+/* Main background - Lingo's vibrant orange gradient */
+body {
+  background: linear-gradient(135deg, #ff9500 0%, #ffcc00 100%);
+  min-height: 100vh;
+}
+
+.language {
+  @apply text-sm sm:text-lg text-right uppercase cursor-pointer;
+  color: #2c2c2c; /* Dark text for better contrast on light backgrounds */
+}
+
+/* Updated textarea to match Lingo's clean white card style */
+.textarea {
+  @apply w-full h-48 max-[392px]:h-44 max-[392px]:text-sm resize-none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  font-family: 'Righteous', cursive;
+  font-weight: 300;
+  line-height: 1.4;
+  color: #2c2c2c;
+  transition: all 0.3s ease;
+}
+
+.textarea:focus {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Card containers */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Button styles to match Lingo */
+.btn {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Override gradient colors to match Lingo's style */
+.bg-gradient-to-r {
+  background: linear-gradient(135deg, #ff9500 0%, #ffcc00 100%);
+}
+
+.bg-gradient-to-l {
+  background: linear-gradient(225deg, #ff9500 0%, #ffcc00 100%);
+}
+
+/* Text colors for better contrast */
+.text-primary {
+  color: #2c2c2c;
+}
+
+.text-secondary {
+  color: #666;
+}
+
+/* Additional utility classes */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lingo-shadow {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Header/title styling */
+.app-title {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
