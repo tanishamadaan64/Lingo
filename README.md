@@ -3,7 +3,7 @@
 **LINGO** is a simple and effective language translator web app that helps users convert text from one language to another quickly and easily.
 
 🔗 **Live Site:** [lingo-silk-two.vercel.app](https://lingo-silk-two.vercel.app)  
-🔗 **GitHub Repository:** [github.com/tanishamadaan64/lingo](https://github.com/tanishamadaan64/lingo)
+🔗 **GitHub Repository:** [github.com/tanishamadaan64/Lingo](https://github.com/tanishamadaan64/Lingo)
 
 ---
 
